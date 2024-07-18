@@ -1,4 +1,4 @@
-package net.apple70cents.templatemod.utils;
+package net.apple70cents.holdontoeverything.utils;
 
 //#if MC>=11800
 import org.slf4j.Logger;
@@ -15,7 +15,7 @@ public class LoggerUtils {
 
     public static void init(){
         //#if MC>=11800
-        LOGGER = LoggerFactory.getLogger("template_mod");
+        LOGGER = LoggerFactory.getLogger("hold_onto_everything");
         //#endif
     }
     public static void info(String s){

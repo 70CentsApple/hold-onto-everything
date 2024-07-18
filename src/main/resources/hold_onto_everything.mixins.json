@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.apple70cents.holdontoeverything.mixins",
+  "compatibilityLevel": "{{COMPATIBILITY_LEVEL}}",
+  "mixins": [
+    "ClientConnectionMixin",
+    "ClientPlayerMixin",
+    "PlayerInventoryMixin",
+    "PlayerMixin",
+    "ScreenHandlerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

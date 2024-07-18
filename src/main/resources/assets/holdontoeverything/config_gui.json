@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "content": [
+    {
+      "key": "category.general",
+      "content": [
+        {
+          "type": "boolean",
+          "key": "config.enabled"
+        },
+        {
+          "type": "boolean",
+          "key": "config.hotbar"
+        },
+        {
+          "type": "boolean",
+          "key": "config.inventory"
+        },
+        {
+          "type": "boolean",
+          "key": "config.container"
+        }
+      ]
+    }
+  ]
+}

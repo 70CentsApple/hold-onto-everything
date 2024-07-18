@@ -1,4 +1,4 @@
-package net.apple70cents.templatemod.config;
+package net.apple70cents.holdontoeverything.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -6,8 +6,8 @@ import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import me.shedaniel.clothconfig2.impl.builders.SubCategoryBuilder;
-import net.apple70cents.templatemod.TemplateMod;
-import net.apple70cents.templatemod.utils.ConfigScreenUtils;
+import net.apple70cents.holdontoeverything.HoldOntoEverything;
+import net.apple70cents.holdontoeverything.utils.ConfigScreenUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Identifier;
 
@@ -17,7 +17,7 @@ import java.io.Reader;
 import java.util.List;
 import java.util.Map;
 
-import static net.apple70cents.templatemod.utils.TextUtils.trans;
+import static net.apple70cents.holdontoeverything.utils.TextUtils.trans;
 
 /**
  * @author 70CentsApple
@@ -31,7 +31,7 @@ public class ConfigScreenGenerator {
     private static void loadConfigGuiMap() {
         try {
             InputStream inputStream = MinecraftClient.getInstance().getClass().getClassLoader()
-                                                     .getResourceAsStream("assets/templatemod/config_gui.json");
+                                                     .getResourceAsStream("assets/holdontoeverything/config_gui.json");
             Reader reader = new InputStreamReader(inputStream);
             configGuiMap = GSON.fromJson(reader, Map.class);
             configGuiMapInitialized = true;
@@ -53,7 +53,7 @@ public class ConfigScreenGenerator {
         //#endif
         ConfigBuilder builder = ConfigBuilder.create().setTitle(trans("gui.title"))
                                              .setDefaultBackgroundTexture(backgroundIdentifier)
-                                             .setTransparentBackground(true).setSavingRunnable(TemplateMod.CONFIG::save);
+                                             .setTransparentBackground(true).setSavingRunnable(HoldOntoEverything.CONFIG::save);
         ConfigEntryBuilder eb = builder.entryBuilder();
         for (Object categoryInfo : (List) configGuiMap.get("content")) {
             ConfigCategory category = builder.getOrCreateCategory(trans((String) ((Map) categoryInfo).get("key")));

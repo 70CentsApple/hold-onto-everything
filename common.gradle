@@ -94,7 +94,7 @@ processResources {
         expand valueMap
     }
     // replaces `{{COMPATIBILITY_LEVEL}}`
-    filesMatching('template_mod.mixins.json') {
+    filesMatching('hold_onto_everything.mixins.json') {
         filter { s -> s.replace('{{COMPATIBILITY_LEVEL}}', "JAVA_${JAVA_COMPATIBILITY.ordinal() + 1}") }
     }
     // replaces `{{FABRIC_API}}` and `{{CLOTH_CONFIG}}`
@@ -107,7 +107,7 @@ processResources {
 // https://github.com/Fallen-Breath/yamlang
 yamlang {
     targetSourceSets = [sourceSets.main]
-    inputDir = 'assets/templatemod/lang'
+    inputDir = 'assets/holdontoeverything/lang'
 }
 
 // ensure that the encoding is set to UTF-8, no matter what the system default is

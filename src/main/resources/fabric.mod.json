@@ -3,15 +3,15 @@
   "id": "${id}",
   "version": "${version}",
 
-  "name": "Template Mod",
-  "description": "Template Mod [CHANGE_ME]",
+  "name": "Hold Onto Everything",
+  "description": "Cling to your gear! Hold onto everything, and don't let it go!",
   "authors": [
     "70CentsApple"
   ],
   "contact": {
-    "homepage": "https://modrinth.com/mod/[CHANGE_ME]",
-    "sources": "https://github.com/70CentsApple/[CHANGE_ME]",
-    "issues": "https://github.com/70CentsApple/[CHANGE_ME]/issues",
+    "homepage": "https://modrinth.com/mod/hold-onto-everything",
+    "sources": "https://github.com/70CentsApple/hold-onto-everything",
+    "issues": "https://github.com/70CentsApple/hold-onto-everything/issues",
     "bilibili": "https://space.bilibili.com/442361724"
   },
 
@@ -21,14 +21,14 @@
   "environment": "client",
   "entrypoints": {
     "main": [
-      "net.apple70cents.templatemod.TemplateMod"
+      "net.apple70cents.holdontoeverything.HoldOntoEverything"
     ],
     "modmenu": [
-      "net.apple70cents.templatemod.config.ModMenuScreen"
+      "net.apple70cents.holdontoeverything.config.ModMenuScreen"
     ]
   },
   "mixins": [
-    "template_mod.mixins.json"
+    "hold_onto_everything.mixins.json"
   ],
 
   "depends": {
@@ -42,7 +42,8 @@
   "custom": {
     "modmenu": {
       "links": {
-        "modmenu.modrinth": "https://modrinth.com/mod/[CHANGE_ME]"
+        "modmenu.modrinth": "https://modrinth.com/mod/hold-onto-everything",
+        "modmenu.github_releases": "https://github.com/70CentsApple/hold-onto-everything/releases"
       }
     }
   }

@@ -1,0 +1,21 @@
+modmenu.nameTranslation.hold_onto_everything: Hold Onto Everything
+modmenu.descriptionTranslation.hold_onto_everything: 愿世界上所有的装备都不再因误操作被丢弃
+key:
+  hold_onto_everything:
+    texts:
+      prevent: '§6[Hold Onto Everything]§r 丢弃操作被阻止'
+    gui:
+      title: Hold Onto Everything 配置菜单
+    config:
+      enabled:
+        .: 启用模组
+        '@Tooltip': 切换整个模组的开关。
+      hotbar:
+        .: 允许快捷栏丢弃
+        '@Tooltip': 未打开背包时，按丢弃键丢弃手中物品
+      inventory:
+        .: 允许背包丢弃
+        '@Tooltip': 在打开背包时，按丢弃键丢弃选中物品
+      container:
+        .: 允许容器丢弃
+        '@Tooltip': 在打开容器时，按丢弃键丢弃选中物品

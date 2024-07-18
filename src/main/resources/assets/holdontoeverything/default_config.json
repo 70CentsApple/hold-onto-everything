@@ -1,0 +1,7 @@
+{
+  "config.version": 1.0,
+  "config.enabled": true,
+  "config.hotbar": false,
+  "config.inventory": true,
+  "config.container": true
+}

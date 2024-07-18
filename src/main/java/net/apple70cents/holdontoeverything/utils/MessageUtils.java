@@ -1,4 +1,4 @@
-package net.apple70cents.templatemod.utils;
+package net.apple70cents.holdontoeverything.utils;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
