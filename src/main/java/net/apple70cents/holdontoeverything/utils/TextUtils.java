@@ -1,4 +1,4 @@
-package net.apple70cents.templatemod.utils;
+package net.apple70cents.holdontoeverything.utils;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -16,7 +16,7 @@ import net.minecraft.registry.BuiltinRegistries;
  * @author 70CentsApple
  */
 public class TextUtils {
-    public static final String PREFIX = "key.template_mod.";
+    public static final String PREFIX = "key.hold_onto_everything.";
 
     public static Text literal(String str) {
         //#if MC>=11900

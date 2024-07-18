@@ -1,4 +1,4 @@
-package net.apple70cents.templatemod.utils;
+package net.apple70cents.holdontoeverything.utils;
 
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import me.shedaniel.clothconfig2.gui.entries.TooltipListEntry;
@@ -14,9 +14,9 @@ import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import static net.apple70cents.templatemod.TemplateMod.CONFIG;
-import static net.apple70cents.templatemod.TemplateMod.DEFAULT_CONFIG;
-import static net.apple70cents.templatemod.utils.TextUtils.trans;
+import static net.apple70cents.holdontoeverything.HoldOntoEverything.CONFIG;
+import static net.apple70cents.holdontoeverything.HoldOntoEverything.DEFAULT_CONFIG;
+import static net.apple70cents.holdontoeverything.utils.TextUtils.trans;
 
 /**
  * @author 70CentsApple

@@ -1,8 +1,8 @@
-package net.apple70cents.templatemod.config;
+package net.apple70cents.holdontoeverything.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import net.apple70cents.templatemod.utils.LoggerUtils;
+import net.apple70cents.holdontoeverything.utils.LoggerUtils;
 import net.minecraft.client.MinecraftClient;
 
 import java.io.*;
@@ -14,7 +14,7 @@ import java.util.Map;
  */
 public class ConfigStorage {
     public static final File FILE = new File(net.fabricmc.loader.api.FabricLoader.getInstance().getConfigDir()
-                                                                                 .toFile(), "template_mod.json");
+                                                                                 .toFile(), "hold_onto_everything.json");
 
     private Map<String, Object> configMap;
 
@@ -48,7 +48,7 @@ public class ConfigStorage {
             Reader reader;
             if (loadDefault) {
                 reader = new InputStreamReader(MinecraftClient.getInstance().getClass().getClassLoader()
-                                                              .getResourceAsStream("assets/templatemod/default_config.json"));
+                                                              .getResourceAsStream("assets/holdontoeverything/default_config.json"));
             } else {
                 reader = new BufferedReader(new FileReader(FILE));
             }
@@ -67,11 +67,11 @@ public class ConfigStorage {
     }
 
     public void save() {
-        LoggerUtils.info("[TemplateMod] Saving configs.");
+        LoggerUtils.info("[HoldOntoEverything] Saving configs.");
         try (FileWriter writer = new FileWriter(FILE)) {
             GSON.toJson(configMap, writer);
         } catch (Exception e) {
-            LoggerUtils.error("[TemplateMod] Couldn't save config.");
+            LoggerUtils.error("[HoldOntoEverything] Couldn't save config.");
             e.printStackTrace();
         }
     }

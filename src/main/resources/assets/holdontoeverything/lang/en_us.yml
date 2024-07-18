@@ -1,0 +1,21 @@
+modmenu.nameTranslation.hold_onto_everything: Hold Onto Everything
+modmenu.descriptionTranslation.hold_onto_everything: Cling to your gear! Hold onto everything, and don't let it go!
+key:
+  hold_onto_everything:
+    texts:
+      prevent: '§6[Hold Onto Everything]§r Discard action cancelled.'
+    gui:
+      title: Hold Onto Everything Configuration
+    config:
+      enabled:
+        .: Enable Hold Onto Everything
+        '@Tooltip': Toggles the entire mod.
+      hotbar:
+        .: Allow Hotbar Discard
+        '@Tooltip': When inventory is closed, discard items in hand by pressing the discard key.
+      inventory:
+        .: Allow Inventory Discard
+        '@Tooltip': When inventory is open, discard selected items by pressing the discard key.
+      container:
+        .: Allow Container Discard
+        '@Tooltip': When a container screen is open, discard selected items by pressing the discard key.

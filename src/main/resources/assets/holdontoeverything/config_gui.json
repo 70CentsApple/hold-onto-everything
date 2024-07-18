@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "content": [
+    {
+      "key": "category.general",
+      "content": [
+        {
+          "type": "boolean",
+          "key": "config.enabled"
+        },
+        {
+          "type": "boolean",
+          "key": "config.hotbar"
+        }
+      ]
+    }
+  ]
+}
