@@ -12,6 +12,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class MinecraftMixin {
     @Inject(method = "stop", at = @At("HEAD"))
     protected void recoverDropKey(CallbackInfo ci) {
+        if (!(boolean) HoldOntoEverything.CONFIG.get("config.enabled")) {
+            return;
+        }
         LoggerUtils.info("[HoldOntoEverything] Recovered drop key!");
         HoldOntoEverything.enableDrop();
     }

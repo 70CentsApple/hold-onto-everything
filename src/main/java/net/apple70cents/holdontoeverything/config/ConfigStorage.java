@@ -2,6 +2,7 @@ package net.apple70cents.holdontoeverything.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import net.apple70cents.holdontoeverything.HoldOntoEverything;
 import net.apple70cents.holdontoeverything.utils.LoggerUtils;
 import net.minecraft.client.MinecraftClient;
 
@@ -67,6 +68,8 @@ public class ConfigStorage {
     }
 
     public void save() {
+        // What if the mod was turned off? So, we should recover the drop key
+        HoldOntoEverything.enableDrop();
         LoggerUtils.info("[HoldOntoEverything] Saving configs.");
         try (FileWriter writer = new FileWriter(FILE)) {
             GSON.toJson(configMap, writer);
