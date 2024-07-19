@@ -11,6 +11,14 @@
         {
           "type": "boolean",
           "key": "config.hotbar"
+        },
+        {
+          "type": "boolean",
+          "key": "config.inventory"
+        },
+        {
+          "type": "boolean",
+          "key": "config.container"
         }
       ]
     }

@@ -6,6 +6,8 @@ key:
       prevent: '§6[Hold Onto Everything]§r Discard action cancelled.'
     gui:
       title: Hold Onto Everything Configuration
+      defaultValue: 'Default: %s'
+      variableType: 'Variable Type: %s'
     config:
       enabled:
         .: Enable Hold Onto Everything

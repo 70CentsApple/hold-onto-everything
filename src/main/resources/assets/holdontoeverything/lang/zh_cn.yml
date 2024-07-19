@@ -6,6 +6,8 @@ key:
       prevent: '§6[Hold Onto Everything]§r 丢弃操作被阻止'
     gui:
       title: Hold Onto Everything 配置菜单
+      defaultValue: 默认：%s
+      variableType: 类型：%s
     config:
       enabled:
         .: 启用模组

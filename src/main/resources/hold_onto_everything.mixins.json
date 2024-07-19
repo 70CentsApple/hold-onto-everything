@@ -4,7 +4,8 @@
   "package": "net.apple70cents.holdontoeverything.mixins",
   "compatibilityLevel": "{{COMPATIBILITY_LEVEL}}",
   "mixins": [
-    "ClientPlayerMixin"
+    "MinecraftMixin",
+    "KeyBindingInvoker"
   ],
   "injectors": {
     "defaultRequire": 1
