@@ -1,0 +1,154 @@
+name: Release to Modrinth and GitHub
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build-and-summary-and-github-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build
+        uses: ./.github/actions/build_artifacts/
+
+      - name: Generate summary
+        uses: ./.github/actions/summary/
+
+      - name: Get variables
+        run: |
+          raw_file_paths=$(ls ./gathered-artifacts/*)
+          # adds line breaks
+          file_paths=${raw_file_paths//$'\n'/,}
+          echo "file_paths=${file_paths}" >> $GITHUB_ENV
+
+          raw_tag_name=${GITHUB_REF#refs/tags/}
+          # removes the 'v' prefix
+          tag_name=${raw_tag_name#v}
+          echo "tag_name=${tag_name}" >> $GITHUB_ENV
+
+          changelog=$(cat changelog.md)
+          echo "changelog<<EOF" >> $GITHUB_ENV
+          echo "${changelog}" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+          
+          # log prints
+          echo "file_paths: $file_paths"
+          echo "tag_name: $tag_name"
+          echo "changelog: $changelog"
+
+      # https://github.com/marketplace/actions/gh-release
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+          repository: 70CentsApple/ChatTools
+          tag_name: "v${{ env.tag_name }}"
+          name: "v${{ env.tag_name }}"
+          body: ${{ env.changelog }}
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+          files: ${{ env.file_paths }}
+
+  modrinth-release:
+    needs:
+      - build-and-summary-and-github-release
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - game_version: "1.16.5"
+            target_game_versions: "1.16,1.16.1,1.16.2,1.16.3,1.16.4,1.16.5"
+            formatted_version_name: "1.16.x"
+            delay: 70
+
+          - game_version: "1.17.1"
+            target_game_versions: "1.17,1.17.1"
+            formatted_version_name: "1.17.x"
+            delay: 60
+
+          - game_version: "1.18.2"
+            target_game_versions: "1.18,1.18.1,1.18.2"
+            formatted_version_name: "1.18.x"
+            delay: 50
+
+          - game_version: "1.19.4"
+            target_game_versions: "1.19,1.19.1,1.19.2,1.19.3,1.19.4"
+            formatted_version_name: "1.19.x"
+            delay: 40
+
+          - game_version: "1.20.1"
+            target_game_versions: "1.20,1.20.1"
+            formatted_version_name: "1.20(.1)"
+            delay: 30
+
+          - game_version: "1.20.4"
+            target_game_versions: "1.20.2,1.20.3,1.20.4"
+            formatted_version_name: "1.20.2(3,4)"
+            delay: 20
+
+          - game_version: "1.20.6"
+            target_game_versions: "1.20.5,1.20.6"
+            formatted_version_name: "1.20.5(6)"
+            delay: 10
+
+          - game_version: "1.21"
+            target_game_versions: "1.21"
+            formatted_version_name: "1.21"
+            delay: 0
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: Artifacts
+          path: gathered-artifacts
+
+      - name: Sleep for ${{ matrix.delay }} seconds
+        run: |
+          echo "Sleeping for ${{ matrix.delay }} seconds..."
+          sleep ${{ matrix.delay }}
+
+      - name: Resolve file path
+        run: |
+          file_path=$(ls gathered-artifacts/*${{ matrix.game_version }}*.jar)
+          echo "file_path=${file_path}" >> $GITHUB_ENV
+          echo "file_path for this version is: $file_path"
+
+      - name: Get variables
+        run: |
+          raw_tag_name=${GITHUB_REF#refs/tags/}
+          # removes the 'v' prefix
+          tag_name=${raw_tag_name#v}
+          echo "tag_name=${tag_name}" >> $GITHUB_ENV
+
+          response=$(curl -s -H "Authorization: token ${{ secrets.GH_TOKEN }}" "https://api.github.com/repos/70CentsApple/ChatTools/releases/latest")
+          changelog=$(echo "${response}" | jq -r '.body')
+          echo "changelog<<EOF" >> $GITHUB_ENV
+          echo "${changelog}" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+          # log prints
+          echo "tag_name: $tag_name"
+          echo "changelog: $changelog"
+
+      # https://github.com/marketplace/actions/upload-to-modrinth
+      - name: Upload to Modrinth
+        uses: RubixDev/modrinth-upload@v1
+        with:
+          token: ${{ secrets.MODRINTH_TOKEN }}
+          file_path: ${{ env.file_path }}
+          name: "v${{ env.tag_name }}+${{ matrix.formatted_version_name }}"
+          version: ${{ env.tag_name }}
+          changelog: ${{ env.changelog }}
+          # requires Cloth Config
+          relations: "9s6osm5g:required"
+          game_versions: ${{ matrix.target_game_versions }}
+          release_type: "release"
+          loaders: "fabric"
+          featured: false
+          project_id: "7lwqrLuR"
