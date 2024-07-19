@@ -81,7 +81,7 @@ jobs:
             delay: 30
 
           - game_version: "1.20.4"
-            target_game_versions: "1.20,1.20.1，1.20.2,1.20.3,1.20.4"
+            target_game_versions: "1.20,1.20.1,1.20.2,1.20.3,1.20.4"
             formatted_version_name: "1.20(.1,2,3,4)"
             delay: 20
 
