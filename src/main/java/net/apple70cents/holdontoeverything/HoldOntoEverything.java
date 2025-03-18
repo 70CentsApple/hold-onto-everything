@@ -66,11 +66,13 @@ public class HoldOntoEverything implements ModInitializer {
     }
 
     public static void disableDrop() {
+        if(MinecraftClient.getInstance().options == null) return;
         MinecraftClient.getInstance().options.dropKey.setBoundKey(InputUtil.UNKNOWN_KEY);
         ((KeyBindingInvoker) MinecraftClient.getInstance().options.dropKey).resetKeybinding();
     }
 
     public static void enableDrop() {
+        if(MinecraftClient.getInstance().options == null) return;
         MinecraftClient.getInstance().options.dropKey.setBoundKey(originalDropKey);
     }
 }
