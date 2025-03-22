@@ -115,7 +115,7 @@ jobs:
 
       - name: Resolve file path
         run: |
-          file_path=$(ls gathered-artifacts/*${{ matrix.game_version }}*.jar)
+          file_path=$(ls gathered-artifacts/*-${{ matrix.game_version }}-*.jar)
           echo "file_path=${file_path}" >> $GITHUB_ENV
           echo "file_path for this version is: $file_path"
 
