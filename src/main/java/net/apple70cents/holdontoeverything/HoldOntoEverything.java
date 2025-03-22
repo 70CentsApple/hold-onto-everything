@@ -28,6 +28,7 @@ public class HoldOntoEverything implements ModInitializer {
     public static ConfigStorage CONFIG;
     public static InputUtil.Key originalDropKey = InputUtil.UNKNOWN_KEY;
     public static final KeyBinding EMPTY_DROP_KEYBINDING = new KeyBinding("key.drop", InputUtil.UNKNOWN_KEY.getCode(), "key.categories.inventory");
+    private static boolean initialized = false;
 
     @Override
     public void onInitialize() {
@@ -41,23 +42,41 @@ public class HoldOntoEverything implements ModInitializer {
         CONFIG = new ConfigStorage(false).withDefault(DEFAULT_CONFIG.getHashmap());
 
         ClientTickEvents.START_CLIENT_TICK.register(client -> {
-            if (!(boolean) HoldOntoEverything.CONFIG.get("config.enabled")) {
+            if (!HoldOntoEverything.CONFIG.getAsBool("config.enabled")) {
                 return;
             }
             KeyBinding dropKey = MinecraftClient.getInstance().options.dropKey;
             if (!dropKey.equals(EMPTY_DROP_KEYBINDING)) {
                 originalDropKey = InputUtil.fromTranslationKey(dropKey.getBoundKeyTranslationKey());
             }
+
+            if (!initialized) {
+                // we put it here because these should be done AFTER the game initialized bound keys
+                // also we need to update `originalDropKey`
+                if (!HoldOntoEverything.CONFIG.getAsBool("status.successfullySaved")) {
+                    // key not recovered on last window close
+                    String lastDropKey = (String) HoldOntoEverything.CONFIG.get("status.lastDropKey");
+                    if (MinecraftClient.getInstance().options != null)
+                        MinecraftClient.getInstance().options.dropKey.setBoundKey(InputUtil.fromTranslationKey(lastDropKey));
+                    originalDropKey = InputUtil.fromTranslationKey(lastDropKey);
+                    enableDrop();
+                    LoggerUtils.warn("[HoldOntoEverything] Did NOT recover the drop key on last window close, now we set it to " + lastDropKey);
+                }
+                HoldOntoEverything.CONFIG.set("status.successfullySaved", false);
+                HoldOntoEverything.CONFIG.save();
+                initialized = true;
+            }
+
             Screen screen = MinecraftClient.getInstance().currentScreen;
             if (screen instanceof GameOptionsScreen) {
                 enableDrop();
                 return;
             }
-            if ((!(boolean) HoldOntoEverything.CONFIG.get("config.hotbar")) && screen == null) {
+            if ((!HoldOntoEverything.CONFIG.getAsBool("config.hotbar")) && screen == null) {
                 disableDrop();
                 return;
             }
-            if ((!(boolean) HoldOntoEverything.CONFIG.get("config.inventory")) && screen instanceof
+            if ((!HoldOntoEverything.CONFIG.getAsBool("config.inventory")) && screen instanceof
                     //#if MC>=12102
                     InventoryScreen
                     //#else
@@ -67,7 +86,7 @@ public class HoldOntoEverything implements ModInitializer {
                 disableDrop();
                 return;
             }
-            if ((!(boolean) HoldOntoEverything.CONFIG.get("config.container")) && (screen instanceof GenericContainerScreen || screen instanceof Generic3x3ContainerScreen)) {
+            if ((!HoldOntoEverything.CONFIG.getAsBool("config.container")) && (screen instanceof GenericContainerScreen || screen instanceof Generic3x3ContainerScreen)) {
                 disableDrop();
                 return;
             }
@@ -77,13 +96,13 @@ public class HoldOntoEverything implements ModInitializer {
     }
 
     public static void disableDrop() {
-        if(MinecraftClient.getInstance().options == null) return;
+        if (MinecraftClient.getInstance().options == null) return;
         MinecraftClient.getInstance().options.dropKey.setBoundKey(InputUtil.UNKNOWN_KEY);
         ((KeyBindingInvoker) MinecraftClient.getInstance().options.dropKey).resetKeybinding();
     }
 
     public static void enableDrop() {
-        if(MinecraftClient.getInstance().options == null) return;
+        if (MinecraftClient.getInstance().options == null) return;
         MinecraftClient.getInstance().options.dropKey.setBoundKey(originalDropKey);
     }
 }

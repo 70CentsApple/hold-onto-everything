@@ -7,7 +7,6 @@ import net.apple70cents.holdontoeverything.utils.LoggerUtils;
 import net.minecraft.client.MinecraftClient;
 
 import java.io.*;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -61,6 +60,10 @@ public class ConfigStorage {
 
     public Object get(String variableName) {
         return configMap.get(variableName);
+    }
+
+    public boolean getAsBool(String variableName) {
+        return (boolean) configMap.get(variableName);
     }
 
     public void set(String variableName, Object value) {

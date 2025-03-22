@@ -1,7 +1,9 @@
 {
-  "config.version": 1.0,
+  "config.version": 1.1,
   "config.enabled": true,
   "config.hotbar": false,
   "config.inventory": true,
-  "config.container": true
+  "config.container": true,
+  "status.successfullySaved": true,
+  "status.lastDropKey": "key.keyboard.q"
 }

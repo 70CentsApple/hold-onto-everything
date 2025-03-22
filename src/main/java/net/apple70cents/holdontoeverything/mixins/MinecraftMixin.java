@@ -17,5 +17,8 @@ public abstract class MinecraftMixin {
         }
         LoggerUtils.info("[HoldOntoEverything] Recovered drop key!");
         HoldOntoEverything.enableDrop();
+        HoldOntoEverything.CONFIG.set("status.successfullySaved", true);
+        HoldOntoEverything.CONFIG.set("status.lastDropKey", HoldOntoEverything.originalDropKey.getTranslationKey());
+        HoldOntoEverything.CONFIG.save();
     }
 }
