@@ -7,12 +7,17 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ingame.AbstractInventoryScreen;
 import net.minecraft.client.gui.screen.ingame.Generic3x3ContainerScreen;
 import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
 import net.minecraft.client.gui.screen.option.GameOptionsScreen;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+
+//#if MC>=12102
+import net.minecraft.client.gui.screen.ingame.InventoryScreen;
+//#else
+//$$ import net.minecraft.client.gui.screen.ingame.AbstractInventoryScreen;
+//#endif
 
 /**
  * @author 70CentsApple
@@ -52,7 +57,13 @@ public class HoldOntoEverything implements ModInitializer {
                 disableDrop();
                 return;
             }
-            if ((!(boolean) HoldOntoEverything.CONFIG.get("config.inventory")) && screen instanceof AbstractInventoryScreen) {
+            if ((!(boolean) HoldOntoEverything.CONFIG.get("config.inventory")) && screen instanceof
+                    //#if MC>=12102
+                    InventoryScreen
+                    //#else
+                    //$$ AbstractInventoryScreen
+                    //#endif
+            ) {
                 disableDrop();
                 return;
             }
@@ -66,11 +77,13 @@ public class HoldOntoEverything implements ModInitializer {
     }
 
     public static void disableDrop() {
+        if(MinecraftClient.getInstance().options == null) return;
         MinecraftClient.getInstance().options.dropKey.setBoundKey(InputUtil.UNKNOWN_KEY);
         ((KeyBindingInvoker) MinecraftClient.getInstance().options.dropKey).resetKeybinding();
     }
 
     public static void enableDrop() {
+        if(MinecraftClient.getInstance().options == null) return;
         MinecraftClient.getInstance().options.dropKey.setBoundKey(originalDropKey);
     }
 }
