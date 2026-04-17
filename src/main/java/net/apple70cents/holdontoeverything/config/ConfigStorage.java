@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.apple70cents.holdontoeverything.HoldOntoEverything;
 import net.apple70cents.holdontoeverything.utils.LoggerUtils;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 
 import java.io.*;
 import java.util.Map;
@@ -47,8 +47,8 @@ public class ConfigStorage {
         try {
             Reader reader;
             if (loadDefault) {
-                reader = new InputStreamReader(MinecraftClient.getInstance().getClass().getClassLoader()
-                                                              .getResourceAsStream("assets/holdontoeverything/default_config.json"));
+                reader = new InputStreamReader(Minecraft.getInstance().getClass().getClassLoader()
+                                                        .getResourceAsStream("assets/holdontoeverything/default_config.json"));
             } else {
                 reader = new BufferedReader(new FileReader(FILE));
             }

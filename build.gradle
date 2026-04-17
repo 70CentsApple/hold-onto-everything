@@ -1,55 +1,128 @@
 plugins {
     id 'maven-publish'
-    id 'fabric-loom' version '1.7-SNAPSHOT' apply false
-
-    // https://github.com/ReplayMod/preprocessor
-    // https://github.com/Fallen-Breath/preprocessor
-    id 'com.replaymod.preprocess' version 'ce1aeb2b'
+    id 'dev.architectury.loom' version '1.14-SNAPSHOT' apply false
+    id 'dev.architectury.loom-no-remap' version '1.14-SNAPSHOT' apply false
 
     // https://github.com/Fallen-Breath/yamlang
-    id 'me.fallenbreath.yamlang' version '1.3.1'
+    id 'me.fallenbreath.yamlang' version '1.5.0'
 }
 
-preprocess {
-    def mc116 = createNode('1.16.5', 1_16_05, 'yarn')
-    def mc117 = createNode('1.17.1', 1_17_01, 'yarn')
-    def mc118 = createNode('1.18.2', 1_18_02, 'yarn')
-    def mc119 = createNode('1.19.4', 1_19_04, 'yarn')
-    def mc12004 = createNode('1.20.4', 1_20_04, 'yarn')
-    def mc12006 = createNode('1.20.6', 1_20_06, 'yarn')
-    def mc121 = createNode('1.21', 1_21_00, 'yarn')
-    def mc1214 = createNode('1.21.4', 1_21_04, 'yarn')
-
-    mc116.link(mc117, null)
-    mc117.link(mc118, null)
-    mc118.link(mc119, null)
-    mc119.link(mc12004, null)
-    mc12004.link(mc12006, null)
-    mc12006.link(mc121, null)
-    mc121.link(mc1214, null)
+// No remap on 26.1+
+def noRemap = sc.current.parsed.matches('>=26.1')
+if (noRemap) {
+    apply plugin: 'dev.architectury.loom-no-remap'
+} else {
+    apply plugin: 'dev.architectury.loom'
 }
 
-tasks.register('buildAndGather') {
-    subprojects {
-        dependsOn project.tasks.named('build').get()
+repositories {
+    maven { url = "https://maven.shedaniel.me/" } // Cloth Config
+    maven { url = "https://maven.terraformersmc.com/releases/" } // Mod Menu
+    maven { url = 'https://maven.parchmentmc.org' } // Parchment
+}
+
+// https://github.com/FabricMC/fabric-loader/issues/783
+if (!noRemap) {
+    configurations {
+        modApi {
+            exclude group: 'net.fabricmc', module: 'fabric-loader'
+        }
     }
-    doFirst {
-        println 'Gathering builds'
-        def buildLibs = { p -> p.buildDir.toPath().resolve('libs')
-        }
-        delete fileTree(buildLibs(rootProject)) {
-            include '*'
-        }
-        subprojects {
-            copy {
-                from(buildLibs(project)) {
-                    include '*.jar'
-                    exclude '*-dev.jar', '*-sources.jar'
-                }
-                into buildLibs(rootProject).resolve('v' + project.mod_version)
-                duplicatesStrategy DuplicatesStrategy.INCLUDE
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+
+    if (!noRemap) {
+        mappings loom.layered() {
+            officialMojangMappings()
+            if (project.parchment_version.size() > 0) {
+                parchment("org.parchmentmc.data:parchment-${project.minecraft_version}:${project.parchment_version}@zip")
             }
-            delete(buildLibs(project))
         }
+    }
+
+    if (noRemap) {
+        implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+        implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+
+        api("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") {
+            exclude(group: "net.fabricmc.fabric-api")
+        }
+        api "com.terraformersmc:modmenu:${project.mod_menu_version}"
+    } else {
+        modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+        modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+
+        modApi("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") {
+            exclude(group: "net.fabricmc.fabric-api")
+        }
+        modApi "com.terraformersmc:modmenu:${project.mod_menu_version}"
+    }
+}
+
+loom {
+    runs {
+        client {
+            // to make sure it generates all "Minecraft Client (:subproject_name)" applications
+            ideConfigGenerated = true
+            runDir '../../run'
+            vmArgs '-Dmixin.debug.export=true'
+        }
+    }
+}
+
+String FABRIC_API_MOD_ID = sc.current.parsed.matches('>=1.18') ? 'fabric-api' : 'fabric'
+String CLOTH_CONFIG_MOD_ID = sc.current.parsed.matches('>=1.18') ? 'cloth-config' : 'cloth-config2'
+
+JavaVersion JAVA_COMPATIBILITY =
+        sc.current.parsed.matches('>=26.1') ? JavaVersion.VERSION_25 :
+                sc.current.parsed.matches('>=1.20.5') ? JavaVersion.VERSION_21 :
+                        sc.current.parsed.matches('>=1.18') ? JavaVersion.VERSION_17 :
+                                sc.current.parsed.matches('>=1.17') ? JavaVersion.VERSION_16 :
+                                        JavaVersion.VERSION_1_8
+
+java {
+    sourceCompatibility = JAVA_COMPATIBILITY
+    targetCompatibility = JAVA_COMPATIBILITY
+}
+
+version = 'v' + project.mod_version + '+' + project.minecraft_version + '-fabric'
+group = project.maven_group
+base.archivesName = project.archives_base_name
+
+processResources {
+    inputs.property "id", project.mod_id
+    inputs.property "version", project.mod_version
+    inputs.property "minecraft_dependency", project.minecraft_dependency
+
+    filesMatching("fabric.mod.json") {
+        def valueMap = ["id"                  : project.mod_id,
+                        "version"             : project.mod_version,
+                        "minecraft_dependency": project.minecraft_dependency]
+        expand valueMap
+    }
+    filesMatching('hold_onto_everything.mixins.json') {
+        filter { s -> s.replace('{{COMPATIBILITY_LEVEL}}', "JAVA_${JAVA_COMPATIBILITY.ordinal() + 1}") }
+    }
+    filesMatching('fabric.mod.json') {
+        filter { s -> s.replace('{{FABRIC_API}}', FABRIC_API_MOD_ID) }
+        filter { s -> s.replace('{{CLOTH_CONFIG}}', CLOTH_CONFIG_MOD_ID) }
+    }
+}
+
+// https://github.com/Fallen-Breath/yamlang
+yamlang {
+    targetSourceSets = [sourceSets.main]
+    inputDir = 'assets/holdontoeverything/lang'
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = "UTF-8"
+}
+
+jar {
+    from(rootProject.file('LICENSE')) {
+        rename { "${it}_${project.archives_base_name}" }
     }
 }

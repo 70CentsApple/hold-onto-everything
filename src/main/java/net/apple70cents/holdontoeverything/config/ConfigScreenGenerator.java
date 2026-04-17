@@ -8,8 +8,13 @@ import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import me.shedaniel.clothconfig2.impl.builders.SubCategoryBuilder;
 import net.apple70cents.holdontoeverything.HoldOntoEverything;
 import net.apple70cents.holdontoeverything.utils.ConfigScreenUtils;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+
+//? if >=26.1 {
+import net.minecraft.resources.Identifier;
+//? } else {
+/*import net.minecraft.resources.ResourceLocation;
+*///? }
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -30,8 +35,8 @@ public class ConfigScreenGenerator {
 
     private static void loadConfigGuiMap() {
         try {
-            InputStream inputStream = MinecraftClient.getInstance().getClass().getClassLoader()
-                                                     .getResourceAsStream("assets/holdontoeverything/config_gui.json");
+            InputStream inputStream = Minecraft.getInstance().getClass().getClassLoader()
+                                               .getResourceAsStream("assets/holdontoeverything/config_gui.json");
             Reader reader = new InputStreamReader(inputStream);
             configGuiMap = GSON.fromJson(reader, Map.class);
             configGuiMapInitialized = true;
@@ -46,11 +51,13 @@ public class ConfigScreenGenerator {
             GUI_VERSION = ((Number) configGuiMap.get("version")).intValue();
         }
 
-        //#if MC>=12100
-        Identifier backgroundIdentifier = Identifier.of("minecraft:textures/block/oak_planks.png");
-        //#else
-        //$$ Identifier backgroundIdentifier = new Identifier("minecraft:textures/block/oak_planks.png");
-        //#endif
+        //? if >=26.1 {
+        Identifier backgroundIdentifier = Identifier.parse("minecraft:textures/block/oak_planks.png");
+        //? } elif >=1.21 {
+        /*ResourceLocation backgroundIdentifier = ResourceLocation.parse("minecraft:textures/block/oak_planks.png");
+        *///? } else {
+        /*ResourceLocation backgroundIdentifier = new ResourceLocation("minecraft:textures/block/oak_planks.png");
+        *///? }
         ConfigBuilder builder = ConfigBuilder.create().setTitle(trans("gui.title"))
                                              .setDefaultBackgroundTexture(backgroundIdentifier)
                                              .setTransparentBackground(true).setSavingRunnable(HoldOntoEverything.CONFIG::save);

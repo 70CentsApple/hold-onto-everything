@@ -1,42 +1,49 @@
 package net.apple70cents.holdontoeverything.utils;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.text.Text;
-import net.minecraft.util.StringHelper;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.chat.Component;
 import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author 70CentsApple
  */
 public class MessageUtils {
-    public static void sendToActionbar(Text text) {
-        if (MinecraftClient.getInstance().player != null) {
-            MinecraftClient.getInstance().player.sendMessage(text, true);
+    public static void sendToActionbar(Component text) {
+        if (Minecraft.getInstance().player != null) {
+            //? if >=26.1 {
+            Minecraft.getInstance().player.sendOverlayMessage(text);
+            //? } else {
+            /*Minecraft.getInstance().player.displayClientMessage(text, true);
+            *///? }
         }
     }
 
-    public static void sendToNonPublicChat(Text text) {
-        MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(text);
+    public static void sendToNonPublicChat(Component text) {
+        //? if >=26.1 {
+        Minecraft.getInstance().gui.getChat().addClientSystemMessage(text);
+        //? } else {
+        /*Minecraft.getInstance().gui.getChat().addMessage(text);
+        *///? }
     }
 
     public static void sendToPublicChat(String text) {
-        ClientPlayerEntity player = MinecraftClient.getInstance().player;
+        LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) {
             return;
         }
-        //#if MC>=11900
-        String text2 = StringHelper.truncateChat(StringUtils.normalizeSpace(text.trim()));
+        //? if >=1.19 {
+        String text2 = StringUtils.normalizeSpace(text.trim());
         if (!text2.isEmpty()) {
-            MinecraftClient.getInstance().inGameHud.getChatHud().addToMessageHistory(text);
+            Minecraft.getInstance().gui.getChat().addRecentChat(text);
             if (text2.startsWith("/")) {
-                player.networkHandler.sendChatCommand(text2.substring(1));
+                player.connection.sendCommand(text2.substring(1));
             } else {
-                player.networkHandler.sendChatMessage(text2);
+                player.connection.sendChat(text2);
             }
         }
-        //#else
-        //$$ player.sendChatMessage(text);
-        //#endif
+        //? } else {
+        /*player.chat(text);
+        *///? }
     }
 }

@@ -3,14 +3,17 @@ package net.apple70cents.holdontoeverything.utils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.minecraft.text.*;
+import net.minecraft.network.chat.*;
 
 import java.util.Map;
 import java.util.regex.Pattern;
 
-//#if MC>=12005
-import net.minecraft.registry.BuiltinRegistries;
-//#endif
+//? if >=1.21.6 {
+import com.mojang.serialization.JsonOps;
+import net.minecraft.core.RegistryAccess;
+//?} elif >=1.20.5 {
+/*import net.minecraft.data.registries.VanillaRegistries;
+*///?}
 
 /**
  * @author 70CentsApple
@@ -18,48 +21,48 @@ import net.minecraft.registry.BuiltinRegistries;
 public class TextUtils {
     public static final String PREFIX = "key.hold_onto_everything.";
 
-    public static Text literal(String str) {
-        //#if MC>=11900
-        return Text.literal(str);
-        //#else
-        //$$return new LiteralText(str);
-        //#endif
+    public static Component literal(String str) {
+        //? if >=1.19 {
+        return Component.literal(str);
+        //? } else {
+        /*return new TextComponent(str);
+        *///? }
     }
 
-    public static Text transWithPrefix(String str, String prefix) {
-        //#if MC>=11900
-        return Text.translatable(prefix + str);
-        //#else
-        //$$return new TranslatableText(prefix + str);
-        //#endif
+    public static Component transWithPrefix(String str, String prefix) {
+        //? if >=1.19 {
+        return Component.translatable(prefix + str);
+        //? } else {
+        /*return new TranslatableComponent(prefix + str);
+        *///? }
     }
 
-    public static Text transWithPrefix(String str, String prefix, Object... args) {
-        //#if MC>=11900
-        return Text.translatable(prefix + str, args);
-        //#else
-        //$$return new TranslatableText(prefix + str, args);
-        //#endif
+    public static Component transWithPrefix(String str, String prefix, Object... args) {
+        //? if >=1.19 {
+        return Component.translatable(prefix + str, args);
+        //? } else {
+        /*return new TranslatableComponent(prefix + str, args);
+        *///? }
     }
 
-    public static Text trans(String str, Object... args) {
+    public static Component trans(String str, Object... args) {
         return of(transWithPrefix(str, PREFIX, args).getString().strip());
     }
 
-    public static Text trans(String str) {
+    public static Component trans(String str) {
         return of(transWithPrefix(str, PREFIX).getString().strip());
     }
 
-    public static Text of(String str) {
-        return Text.of(str);
+    public static Component of(String str) {
+        return Component.nullToEmpty(str);
     }
 
-    public static Text empty() {
-        //#if MC>=11900
-        return Text.empty();
-        //#else
-        //$$return of("");
-        //#endif
+    public static Component empty() {
+        //? if >=1.19 {
+        return Component.empty();
+        //? } else {
+        /*return of("");
+        *///? }
     }
 
     /**
@@ -81,25 +84,31 @@ public class TextUtils {
     }
 
     /**
-     * replace a {@link MutableText}
+     * replace a {@link MutableComponent}
      *
      * @param text      the text
      * @param oldString old string
      * @param newString new string
      * @return text after replacement
      */
-    public static MutableText replaceText(MutableText text, String oldString, String newString) {
-        //#if MC>=12005
-        JsonElement jsonElement = new Text.Serializer(BuiltinRegistries.createWrapperLookup()).serialize(text, null, null);
-        //#else
-        //$$ JsonElement jsonElement = Text.Serialization.toJsonTree(text);
-        //#endif
+    public static MutableComponent replaceText(MutableComponent text, String oldString, String newString) {
+        //? if >=1.21.6 {
+        JsonElement jsonElement = ComponentSerialization.CODEC.encode(text,
+                RegistryAccess.EMPTY.createSerializationContext(JsonOps.INSTANCE), null).result().orElse(null);
+        //?} elif >=1.20.5 {
+        /*JsonElement jsonElement = new Component.SerializerAdapter(VanillaRegistries.createLookup()).serialize(text, null, null);
+        *///?} else {
+        /*JsonElement jsonElement = Component.Serializer.toJsonTree(text);
+        *///?}
         replaceFieldValue(jsonElement, oldString, newString);
-        //#if MC>=12005
-        return new Text.Serializer(BuiltinRegistries.createWrapperLookup()).deserialize(jsonElement, null, null);
-        //#else
-        //$$ return Text.Serialization.fromJsonTree(jsonElement);
-        //#endif
+        //? if >=1.21.6 {
+        return ComponentSerialization.CODEC.parse(RegistryAccess.EMPTY.createSerializationContext(JsonOps.INSTANCE),
+                jsonElement).result().orElse(null).copy();
+        //?} elif >=1.20.5 {
+        /*return new Component.SerializerAdapter(VanillaRegistries.createLookup()).deserialize(jsonElement, null, null);
+        *///?} else {
+        /*return Component.Serializer.fromJson(jsonElement);
+        *///?}
     }
 
     private static void replaceFieldValue(JsonElement jsonElement, String oldValue, String newValue) {
