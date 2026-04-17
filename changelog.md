@@ -1,2 +1,1 @@
-- Updated to 1.21.2(3,4).
-- Now this mod will try to recover the drop key if it had failed to recover that on the previous game end.
+- Updated to newer Minecraft versions
