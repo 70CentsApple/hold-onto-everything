@@ -83,34 +83,6 @@ public class TextUtils {
         return str.replace('§', '&');
     }
 
-    /**
-     * replace a {@link MutableComponent}
-     *
-     * @param text      the text
-     * @param oldString old string
-     * @param newString new string
-     * @return text after replacement
-     */
-    public static MutableComponent replaceText(MutableComponent text, String oldString, String newString) {
-        //? if >=1.21.6 {
-        JsonElement jsonElement = ComponentSerialization.CODEC.encode(text,
-                RegistryAccess.EMPTY.createSerializationContext(JsonOps.INSTANCE), null).result().orElse(null);
-        //?} elif >=1.20.5 {
-        /*JsonElement jsonElement = new Component.SerializerAdapter(VanillaRegistries.createLookup()).serialize(text, null, null);
-        *///?} else {
-        /*JsonElement jsonElement = Component.Serializer.toJsonTree(text);
-        *///?}
-        replaceFieldValue(jsonElement, oldString, newString);
-        //? if >=1.21.6 {
-        return ComponentSerialization.CODEC.parse(RegistryAccess.EMPTY.createSerializationContext(JsonOps.INSTANCE),
-                jsonElement).result().orElse(null).copy();
-        //?} elif >=1.20.5 {
-        /*return new Component.SerializerAdapter(VanillaRegistries.createLookup()).deserialize(jsonElement, null, null);
-        *///?} else {
-        /*return Component.Serializer.fromJson(jsonElement);
-        *///?}
-    }
-
     private static void replaceFieldValue(JsonElement jsonElement, String oldValue, String newValue) {
         if (jsonElement.isJsonObject()) {
             JsonObject jsonObject = jsonElement.getAsJsonObject();

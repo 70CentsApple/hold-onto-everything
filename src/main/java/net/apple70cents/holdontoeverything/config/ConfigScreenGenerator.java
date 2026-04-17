@@ -10,11 +10,11 @@ import net.apple70cents.holdontoeverything.HoldOntoEverything;
 import net.apple70cents.holdontoeverything.utils.ConfigScreenUtils;
 import net.minecraft.client.Minecraft;
 
-//? if >=26.1 {
+//? if >=1.21.11 {
 import net.minecraft.resources.Identifier;
-//? } else {
+//?} else {
 /*import net.minecraft.resources.ResourceLocation;
-*///? }
+ *///?}
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -51,7 +51,7 @@ public class ConfigScreenGenerator {
             GUI_VERSION = ((Number) configGuiMap.get("version")).intValue();
         }
 
-        //? if >=26.1 {
+        //? if >=1.21.11 {
         Identifier backgroundIdentifier = Identifier.parse("minecraft:textures/block/oak_planks.png");
         //? } elif >=1.21 {
         /*ResourceLocation backgroundIdentifier = ResourceLocation.parse("minecraft:textures/block/oak_planks.png");

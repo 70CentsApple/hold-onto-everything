@@ -31,7 +31,7 @@ public class HoldOntoEverything implements ModInitializer {
     public final static ConfigStorage DEFAULT_CONFIG = new ConfigStorage(true);
     public static ConfigStorage CONFIG;
     public static InputConstants.Key originalDropKey = InputConstants.UNKNOWN;
-    //? if >=26.1 {
+    //? if >=1.21.9 {
     public static final KeyMapping EMPTY_DROP_KEYBINDING = new KeyMapping("key.drop", InputConstants.UNKNOWN.getValue(), KeyMapping.Category.INVENTORY);
     //? } else {
     /*public static final KeyMapping EMPTY_DROP_KEYBINDING = new KeyMapping("key.drop", InputConstants.UNKNOWN.getValue(), "key.categories.inventory");
