@@ -20,9 +20,11 @@ public class MessageUtils {
     }
 
     public static void sendToNonPublicChat(Component text) {
-        //? if >=26.1 {
-        Minecraft.getInstance().gui.getChat().addClientSystemMessage(text);
-        //? } else {
+        //? if >=26.2 {
+        Minecraft.getInstance().gui.hud.getChat().addClientSystemMessage(text);
+        //?} elif >=26.1 {
+        /*Minecraft.getInstance().gui.getChat().addClientSystemMessage(text);
+        *///? } else {
         /*Minecraft.getInstance().gui.getChat().addMessage(text);
         *///? }
     }
@@ -35,7 +37,11 @@ public class MessageUtils {
         //? if >=1.19 {
         String text2 = StringUtils.normalizeSpace(text.trim());
         if (!text2.isEmpty()) {
-            Minecraft.getInstance().gui.getChat().addRecentChat(text);
+            Minecraft.getInstance().gui
+                    //? if >=26.2 {
+                    .hud
+                    //?}
+                    .getChat().addRecentChat(text);
             if (text2.startsWith("/")) {
                 player.connection.sendCommand(text2.substring(1));
             } else {

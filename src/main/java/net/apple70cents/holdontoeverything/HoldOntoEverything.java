@@ -75,7 +75,11 @@ public class HoldOntoEverything implements ModInitializer {
                 initialized = true;
             }
 
-            Screen screen = Minecraft.getInstance().screen;
+//? if >=26.2 {
+            Screen screen = Minecraft.getInstance().gui.screen();
+//? } else {
+            /*Screen screen = Minecraft.getInstance().screen;
+*///? }
             if (screen instanceof OptionsScreen) {
                 enableDrop();
                 return;

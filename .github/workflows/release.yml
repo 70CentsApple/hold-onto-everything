@@ -63,56 +63,61 @@ jobs:
           - game_version: "1.16.5-fabric"
             target_game_versions: "1.16,1.16.1,1.16.2,1.16.3,1.16.4,1.16.5"
             formatted_version_name: "1.16.x"
-            delay: 100
+            delay: 110
 
           - game_version: "1.17.1-fabric"
             target_game_versions: "1.17,1.17.1"
             formatted_version_name: "1.17.x"
-            delay: 90
+            delay: 100
 
           - game_version: "1.18.2-fabric"
             target_game_versions: "1.18,1.18.1,1.18.2"
             formatted_version_name: "1.18.x"
-            delay: 80
+            delay: 90
 
           - game_version: "1.19.4-fabric"
             target_game_versions: "1.19,1.19.1,1.19.2,1.19.3,1.19.4"
             formatted_version_name: "1.19.x"
-            delay: 70
+            delay: 80
 
           - game_version: "1.20.4-fabric"
             target_game_versions: "1.20,1.20.1,1.20.2,1.20.3,1.20.4"
             formatted_version_name: "1.20(.1,2,3,4)"
-            delay: 60
+            delay: 70
 
           - game_version: "1.20.6-fabric"
             target_game_versions: "1.20.5,1.20.6"
             formatted_version_name: "1.20.5(6)"
-            delay: 50
+            delay: 60
 
           - game_version: "1.21-fabric"
             target_game_versions: "1.21,1.21.1"
             formatted_version_name: "1.21(.1)"
-            delay: 40
+            delay: 50
 
           - game_version: "1.21.4-fabric"
             target_game_versions: "1.21.2,1.21.3,1.21.4,1.21.5,1.21.6,1.21.7,1.21.8"
             formatted_version_name: "1.21.2(3,4,5,6,7,8)"
-            delay: 30
+            delay: 40
 
           - game_version: "1.21.10-fabric"
             target_game_versions: "1.21.9,1.21.10"
             formatted_version_name: "1.21.9(10)"
-            delay: 20
+            delay: 30
 
           - game_version: "1.21.11-fabric"
             target_game_versions: "1.21.11"
             formatted_version_name: "1.21.11"
-            delay: 10
+            delay: 20
 
           - game_version: "26.1.2-fabric"
             target_game_versions: "26.1,26.1.1,26.1.2"
             formatted_version_name: "26.1(.x)"
+            delay: 10
+
+          - game_version: "26.2-fabric"
+            target_game_versions: "26.2"
+            formatted_version_name: "26.2"
             delay: 0
     steps:
       - uses: actions/checkout@v4
